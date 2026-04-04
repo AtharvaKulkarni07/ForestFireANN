@@ -1,0 +1,48 @@
+{
+  "features": [
+    "X",
+    "Y",
+    "month_enc",
+    "day_enc",
+    "FFMC",
+    "DMC",
+    "DC",
+    "ISI",
+    "temp",
+    "RH",
+    "wind",
+    "rain_flag"
+  ],
+  "target_transform": "log1p",
+  "n_train": 410,
+  "n_test": 103,
+  "metrics": {
+    "mse_log": 1.7907,
+    "rmse_log": 1.3382,
+    "mae_log": 1.0461,
+    "r2_log": -0.0719,
+    "rmse_ha": 20.45,
+    "mae_ha": 7.39
+  },
+  "best_hyperparameters": {
+    "n_layers": 2,
+    "units_0": 128,
+    "l2_0": 0.0001,
+    "dropout_0": 0.30000000000000004,
+    "units_1": 64,
+    "l2_1": 0.0001,
+    "dropout_1": 0.1,
+    "learning_rate": 0.01,
+    "units_2": 256,
+    "l2_2": 0.0001,
+    "dropout_2": 0.4
+  },
+  "best_epoch": 10,
+  "training_epochs": 25,
+  "preprocessing": {
+    "duplicates_dropped": 4,
+    "rain_flag_used": true,
+    "target_transform": "log1p",
+    "scaler": "StandardScaler"
+  }
+}
