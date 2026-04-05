@@ -9,8 +9,7 @@ import pickle
 import json
 import os
 
-import tensorflow as tf
-from tensorflow import keras
+import tflite_runtime.interpreter as tflite
 
 # ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
@@ -56,7 +55,11 @@ st.markdown("""
 # ── Load artefacts (cached) ───────────────────────────────────────────────────
 @st.cache_resource
 def load_model():
-    return keras.models.load_model("forest_fire_model.keras")
+    interpreter = tflite.Interpreter(model_path="forest_fire_model.tflite")
+    interpreter.allocate_tensors()
+    input_details = interpreter.get_input_details()
+    output_details = interpreter.get_output_details()
+    return interpreter, input_details, output_details
 
 @st.cache_resource
 def load_scaler():
@@ -79,7 +82,7 @@ def load_data():
 
 
 # ── Check files exist ─────────────────────────────────────────────────────────
-REQUIRED = ["forest_fire_model.keras", "scaler.pkl",
+REQUIRED = ["forest_fire_model.tflite", "scaler.pkl",
             "label_encoders.pkl", "model_metadata.json"]
 missing = [f for f in REQUIRED if not os.path.exists(f)]
 
@@ -88,7 +91,7 @@ if missing:
     st.info("Run `train_model.py` in Colab, download the artefacts, and place them here.")
     st.stop()
 
-model    = load_model()
+model, input_details, output_details = load_model()
 scaler   = load_scaler()
 encoders = load_encoders()
 meta     = load_metadata()
@@ -173,9 +176,11 @@ with tab1:
 
         raw = np.array([[X_coord, Y_coord, month_enc, day_enc,
                          FFMC, DMC, DC, ISI, temp, RH, wind, rain]])
-        raw_scaled = scaler.transform(raw)
+        raw_scaled = scaler.transform(raw).astype(np.float32)
 
-        log_pred = model.predict(raw_scaled, verbose=0)[0][0]
+        model.set_tensor(input_details[0]["index"], raw_scaled)
+        model.invoke()
+        log_pred = model.get_tensor(output_details[0]["index"])[0][0]
         area_pred = float(np.expm1(log_pred))
 
         # Risk category
