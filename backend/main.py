@@ -21,11 +21,13 @@ from tensorflow import keras
 # ── Paths ─────────────────────────────────────────────────────────────────────
 BASE_DIR = Path(__file__).resolve().parent.parent  # project root
 
-MODEL_PATH    = BASE_DIR / "forest_fire_model.keras"
-SCALER_PATH   = BASE_DIR / "scaler.pkl"
-ENCODER_PATH  = BASE_DIR / "label_encoders.pkl"
-META_PATH     = BASE_DIR / "model_metadata.json"
-DATA_PATH     = BASE_DIR / "forestfires.csv"
+MODEL_DIR     = BASE_DIR / "model"
+
+MODEL_PATH    = MODEL_DIR / "forest_fire_model.keras"
+SCALER_PATH   = MODEL_DIR / "scaler.pkl"
+ENCODER_PATH  = MODEL_DIR / "label_encoders.pkl"
+META_PATH     = MODEL_DIR / "model_metadata.json"
+DATA_PATH     = MODEL_DIR / "forestfires.csv"
 
 # ── Load artefacts at startup ─────────────────────────────────────────────────
 REQUIRED = [MODEL_PATH, SCALER_PATH, ENCODER_PATH, META_PATH, DATA_PATH]
