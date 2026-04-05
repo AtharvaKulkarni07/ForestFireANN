@@ -1,22 +1,3 @@
-"""
-Forest Fire Burned Area Prediction — Streamlit App
-====================================================
-Run locally:
-    streamlit run app.py
-
-Deploy to Streamlit Cloud:
-    1. Push this repo to GitHub (include requirements.txt)
-    2. Go to https://share.streamlit.io → New app → select repo
-    3. Set Main file path: app.py
-
-Required files in the same folder:
-    forest_fire_model.keras
-    scaler.pkl
-    label_encoders.pkl
-    model_metadata.json
-    forestfires.csv
-"""
-
 import streamlit as st
 import numpy as np
 import pandas as pd
@@ -34,7 +15,6 @@ from tensorflow import keras
 # ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="Forest Fire Predictor",
-    page_icon="🔥",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -104,7 +84,7 @@ REQUIRED = ["forest_fire_model.keras", "scaler.pkl",
 missing = [f for f in REQUIRED if not os.path.exists(f)]
 
 if missing:
-    st.error(f"❌ Missing files: {missing}")
+    st.error(f"Missing files: {missing}")
     st.info("Run `train_model.py` in Colab, download the artefacts, and place them here.")
     st.stop()
 
@@ -121,8 +101,7 @@ DAY_ORDER   = encoders["day"]
 
 # ── Sidebar ───────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.image("https://img.icons8.com/fluency/96/fire-element.png", width=70)
-    st.markdown("## 🔥 Forest Fire Predictor")
+    st.markdown("## Forest Fire Predictor")
     st.markdown("Predict burned area using an **ANN** trained on the UCI Forest Fires dataset.")
     st.divider()
     st.markdown("**Model Performance**")
@@ -143,10 +122,10 @@ with st.sidebar:
 
 
 # ── Header ────────────────────────────────────────────────────────────────────
-st.markdown('<div class="main-title">🔥 Forest Fire Burned Area Predictor</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">Forest Fire Burned Area Predictor</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Deep Learning (ANN) · Montesinho Natural Park, Portugal</div>', unsafe_allow_html=True)
 
-tab1, tab2, tab3, tab4 = st.tabs(["🎯 Predict", "📊 EDA", "🧠 Model Info", "📋 Dataset"])
+tab1, tab2, tab3, tab4 = st.tabs(["Predict", "EDA", "Model Info", "Dataset"])
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -160,21 +139,21 @@ with tab1:
         col1, col2, col3 = st.columns(3)
 
         with col1:
-            st.markdown("**📍 Location & Time**")
+            st.markdown("**Location & Time**")
             X_coord = st.slider("X – East coord (1–9)",   1, 9, 5)
             Y_coord = st.slider("Y – North coord (2–9)",  2, 9, 4)
             month   = st.selectbox("Month", MONTH_ORDER, index=7)  # aug default
             day     = st.selectbox("Day of week", DAY_ORDER, index=4)  # fri
 
         with col2:
-            st.markdown("**🌡️ Weather Conditions**")
+            st.markdown("**Weather Conditions**")
             temp = st.slider("Temperature (°C)",   2.2, 33.3, 22.0, step=0.1)
             RH   = st.slider("Relative Humidity (%)", 15, 100, 40)
             wind = st.slider("Wind Speed (km/h)",  0.4, 9.4, 4.0, step=0.1)
             rain = st.slider("Rain (mm/m²)",       0.0, 6.4, 0.0, step=0.1)
 
         with col3:
-            st.markdown("**🔥 Fire Weather Indices (FWI)**")
+            st.markdown("**Fire Weather Indices (FWI)**")
             FFMC = st.slider("FFMC", 18.7, 96.2, 90.6, step=0.1,
                              help="Fine Fuel Moisture Code — moisture in litter")
             DMC  = st.slider("DMC",  1.1, 291.3, 110.9, step=0.1,
@@ -186,7 +165,7 @@ with tab1:
 
     st.divider()
 
-    if st.button("🔥 Predict Burned Area", use_container_width=True, type="primary"):
+    if st.button("Predict Burned Area", use_container_width=True, type="primary"):
 
         # Build feature vector
         month_enc = MONTH_ORDER.index(month) + 1
@@ -244,7 +223,7 @@ with tab1:
             st.dataframe(inp_df, use_container_width=True, hide_index=True)
 
         # Confidence note
-        st.info("ℹ️ This model is trained on 517 records. Predictions are indicative — "
+        st.info("This model is trained on 517 records. Predictions are indicative — "
                 "the Forest Fires dataset is known to be challenging for regression models.")
 
 
@@ -402,7 +381,7 @@ with tab4:
     )
 
     st.download_button(
-        label="⬇️ Download filtered CSV",
+        label="Download filtered CSV",
         data=filtered_df.to_csv(index=False),
         file_name="forestfires_filtered.csv",
         mime="text/csv"
@@ -427,7 +406,7 @@ with tab4:
             "Relative Humidity (%)",
             "Wind speed (km/h)",
             "Outside rain (mm/m²)",
-            "🎯 TARGET: Burned area (ha)",
+            "TARGET: Burned area (ha)",
         ]
     })
     st.dataframe(col_desc, use_container_width=True, hide_index=True)
